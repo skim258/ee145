@@ -33,10 +33,10 @@ AdjTable(30).node = [27,29,31];
 AdjTable(31).node = [30,32];
 AdjTable(32).node = [23,31];
 %adjacency table end-------------------------------
-startNode = 3;
-goalNode = 28;
+startNode = 4;
+goalNode = 30;
 parent = computeBFStree(AdjTable,startNode);
-pathBFS = computeBFSpath(AdjTable, startNode, goalNode)
+%pathBFS = computeBFSpath(AdjTable, startNode, goalNode);
 
 function [parentVec, startNodeFlag] = computeBFStree(AdjTable,startNode)
 %returns parent vector of the `nodes 
@@ -49,7 +49,7 @@ Q = [startNode];    %initialize Q
 v = 0;   %initialize vertex
 while ~isempty(Q)
     v = Q(end);   %retreve(Q)
-    Q(end) = [];
+    Q(1) = [];
     arrCheck = ismember(AdjTable(v).node, startNode); %check neighboring node
     [num1 sizeArr] = size(arrCheck);    %size = [1 size_of_array]
     for i = 1:sizeArr   %check for every node connnected to v
@@ -59,8 +59,8 @@ while ~isempty(Q)
         
         u = AdjTable(v).node(i);    %check nodes connected to the vertex
         if (parentVec(u) == 0)
-            parentVec(u) = v;
-            Q = [u, Q];
+            parentVec(u) = v
+            Q = [u, Q]
         end
     end
 
@@ -70,6 +70,7 @@ if(startNodeFlag)
 else
     disp('error: couldn''t find start node')
 end
+root = startNode;
 end
 
 function[pathBFS] = computeBFSpath(AdjTable, startNode, goalNode)
@@ -78,20 +79,19 @@ function[pathBFS] = computeBFSpath(AdjTable, startNode, goalNode)
     arrCheck = [];
     goalExists = 0;   %flag if goal node exists
     [num1 numNode] = size(AdjTable); %[1 number of node]
-    for i = 1:numNode
+    for i = numNode:-1:1
         arrCheck = ismember(AdjTable(i).node, goalNode); %check neighboring node 
         [num1 sizeArr] = size(arrCheck);    %size = [1 size_of_array]
         for j = 1:sizeArr
             if(arrCheck(j)) %if goalNode is member of the array
                 goalExists = 1; %trigger flag
-                break;
             end
         end
     end
     currNode = goalNode;
     pathBFS = [currNode];
     if(startExist & goalExists)
-        while ~isequal(currNode, startNode)
+        while isequal(currNode, startNode)
             currNode = parent(currNode);
             pathBFS = [currNode pathBFS];
         end
