@@ -1,5 +1,6 @@
 function[isInPoly] = isPointInConvexPolygon(q,P)
-%input: a point q and a convex polygon P
+%input: a point q and a convex polygon P in from of list of vertices
+%with first vertice appended to last
 %output: true(1) o false(0)
 notInPoly = 0;   %initialize
 isInPoly = 0;

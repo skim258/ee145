@@ -12,6 +12,8 @@ for i = 1:length(seq)
     end
     for j = 1:length(seq)
         if(mod(j,2) | mod(i,2))   %if odd
+            %do nothing
+            
         else
             plot(seq(j),seq(i),'*b')
         end

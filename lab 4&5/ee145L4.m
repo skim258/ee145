@@ -1,4 +1,4 @@
-clc, clear
+clc, clear all
 %adjacency table start-------------------------------
 AdjTable(1).node = [2,10];
 AdjTable(2).node = [1,3,11];
@@ -29,15 +29,18 @@ AdjTable(26).node = [25,27];
 AdjTable(27).node = [26,28];
 AdjTable(28).node = [27,29];
 AdjTable(29).node = [28,30];
-AdjTable(30).node = [27,29,31];
+AdjTable(30).node = [22,29,31];
 AdjTable(31).node = [30,32];
 AdjTable(32).node = [23,31];
 %adjacency table end-------------------------------
-startNode = 3;
-goalNode = 28;
+startNode = 9;
+goalNode = 21;
 parent = computeBFStree(AdjTable,startNode);
 pathBFS = computeBFSpath(AdjTable, startNode, goalNode)
+plotObsNPath(pathBFS,startNode);
 
+axis([.1 .9, 0 .4])
+grid on
 function [parentVec, startNodeFlag] = computeBFStree(AdjTable,startNode)
 %returns parent vector of the `nodes 
 %returns error message if start node not found
@@ -98,4 +101,41 @@ function[pathBFS] = computeBFSpath(AdjTable, startNode, goalNode)
     else
         disp('Error: couldn''t find goal node')   %fail condition, there is no start node
     end 
+end
+
+function plotObsNPath(pathBFS,initPt)
+workMap = [ 1 1 1 1 1 1 1 1 1
+            1 1 0 0 1 1 1 0 1
+            1 1 0 0 0 0 1 0 1
+            1 1 0 0 0 0 1 0 1
+            1 1 1 1 1 1 1 1 1];   %map where obstacles are 0 and vertices are 1
+[row,col] = size(workMap);
+nodeidx = 1;  %node number index
+for i = 1:row
+    for j = 1:col
+        if(workMap(i,j))
+            nodeCoord(nodeidx).node(1) = j;
+            nodeCoord(nodeidx).node(2) = row - i;
+            nodeidx = nodeidx + 1;
+        else
+            plot(.1*j,.1*(row - i), '*r')  %plot obstacle, resized to 10 times
+            hold on
+        end
+    end
+end
+
+plotPath = ismember(pathBFS, workMap);  %gives matrix of path
+while ~isempty(pathBFS)
+    nodeX = nodeCoord(pathBFS(1)).node(1);
+    nodeY = nodeCoord(pathBFS(1)).node(2);
+    if(isequal(initPt, pathBFS(1)))
+        plot(.1*nodeX,.1*nodeY,'*g')    %plot first point as green
+    else
+        plot(.1*nodeX,.1*nodeY,'*b')
+    end
+    pathBFS(1) = [];
+end
+hold off
+
+
 end
